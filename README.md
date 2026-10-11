@@ -1,4 +1,4 @@
-# SAP Extensibility Hub CPI Adapter Supplier
+# SAP Extensibility Hub CPI Adapter Supplier (Sandbox)
 
 # 📦 Dashboard zur Optimierung des Warenbestands (Migration vom Legacy- zum Cloud-Umfeld)
 
