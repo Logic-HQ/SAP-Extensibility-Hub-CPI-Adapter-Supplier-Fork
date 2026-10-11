@@ -1,0 +1,59 @@
+{
+  "api_version": "4",
+  "service_root_url": "/sap/opu/odata/sap/Z_INV_OPT_SERVICE/",
+  "versioning_strategy": "defaultVersionOnly",
+  "endpoints": [
+    {
+      "name": "Z_InventoryOptimizationHeader_SRV",
+      "type": "$Metadata",
+      "url": "{Z_InventoryOptimizationHeader}",
+      "description": "Core header service providing aggregated stock snapshots per storage location group.",
+      "exposed_entities": ["Z_inv_opt_header"],
+      "capabilities": {
+        "batch_support": true,
+        "search_enabled": false,
+        "export_allowed": false
+      },
+      "annotations_used": ["/IWBEP/^M_ANNO_01", "/IWBEP/^(#ANNO)_Z_INV_OPT_HEADER"]
+    }
+  ],
+  "entity_sets": {
+    "Z_inv_opt_header": {
+      "description": "High-level dashboard view aggregating stock by Storage Location Group (VORWA). Designed for ListReports and AnalysisPages.",
+      "key_fields": ["MANDT", "LAGRGRUPPE"],
+      "aggregations": [
+        {"name": "TOTAL_AVAILABLE_STOCK", "type": "INT32"},
+        {"name": "UNIQUE_MATERIAL_COUNT", "type": "CHAR"}
+      ],
+      "filterable_on_fields": ["MANDT"]
+    },
+    "Z_mat_stock_details": {
+      "description": "Detailed transactional view combining Master Data (MARA/MARD), Stock, Movements, and Vendor Info.",
+      "key_fields": ["MANDT", "MATNR"],
+      "aggregations": [],
+      "filterable_on_fields": ["LAGERORT", "WERK"]
+    }
+  },
+  "integration_flows_metadata": {
+    "inbound_stock_update_flow": {
+      "flow_type_id": "/IWBEP/FLOW_TYPE_INBOUND_STOCK_UPDATE_V4",
+      "description": "Maps Supplier API JSON payloads to SAP internal OData V4 structure for automatic stock posting.",
+      "mappings_file_path": "./integration-cpi/flows/inbound_stock-update.json"
+    },
+    "outbound_alert_flow": {
+      "flow_type_id": "/IWBEP/FLOW_TYPE_OUTBOUND_ALERT_V2",
+      "description": "Transforms low-stock alerts from CDS view to SAP GUI IDoc or External REST Consumer.",
+      "mappings_file_path": "./integration-cpi/flows/outbound_alert_flow.json"
+    }
+  },
+  "security_metadata": {
+    "authentication_type": "SAML2",
+    "user_info_provider_endpoint_url": "/sap/bc/sec/auth/saml/v1.0/UserInfoProvider/",
+    "authorizations_enabled_in_odata_service_configuration_screen": true,
+    "authorization_groups_to_link": ["Z_INV_DASHBOARD_AUTH_GROUP"]
+  },
+  "performance_notes": {
+    "view_optimization": "All joins are executed on HANA in-memory within CDS views.",
+    "caching_strategy": "First N results cached for ListReports to reduce backend load."
+  }
+}
