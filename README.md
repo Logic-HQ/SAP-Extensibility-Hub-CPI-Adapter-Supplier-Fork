@@ -51,6 +51,44 @@ graph TD;
     
 ```
 
+```mermaid
+graph TD;
+    Client["`**Fiori Elements App**
+UI5 / Mobile Responsive`"] --> |Consumes OData V4| API[S/4HANA Cloud];
+    
+    subgraph "Core Logic Layer"
+        CDS["`CDS Views
+*Z_INVENTORY_STATUS*`"];
+        ABAP["`ABAP OO Classes
+*Business Rules*
+initial-data-load.abap`"];
+    end
+    
+    Client --> |Reads/Updates| CDS;
+    
+    subgraph "Integration Layer (SAP BTP)"
+        FlowInbound["`Integration Flow:
+inbound_stock-update.json`"];
+        Mapping["`XML-to-JSON
+*Adapter Pattern*`"];
+        Outbound["`Outbound Alert Flow:
+outbound_alert_flow.json`"];
+    end
+    
+    Supplier["Supplier Portal API"] --> |Raw XML| Mapping;
+    
+    subgraph "DevOps & CI/CD"
+        Github["`Github Actions
+**deploy-backend.yml**`"];
+        Audit["`*Z_INTEGRATION_AUDIT_LOG*`"];
+    end
+    
+    FlowInbound -.-> Supplier;
+    Outbound --> |REST API| Gateway["AWS Lambda / External Partner"];
+
+```
+
+
 ### Wichtige technische Highlights:
 1.  **Datenmodell:** Direkte `SELECT`-Anweisungen wurden durch annotierte CDS Views (`@VDM`) ersetzt, um hochoptimierte HANA-Abfragen und nahtlose Fiori-Konsumption zu gewährleisten.
 2.  **Integrationsresilienz:** Implementierung einer robusten „Retry-Policy" in ausgehenden Flows zur Handhabung vorübergehender API-Fehler ohne Blockade der Benutzer; Ereignisse werden direkt in eine Audit-Tabelle protokolliert.
