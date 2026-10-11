@@ -75,6 +75,7 @@ graph TD;
 
 ### Installationschritte
 
+## [Spezifikation des Datenmodells](https://github.com/ValentinaTech/SAP-Extensibility-Hub-CPI-Adapter-Supplier/blob/main/inventory-optimization-dashboard/docs/data-model-specification.md)
 
 ## 🎯 Wesentliche funktionale Anforderungen zur Implementierung:
 
