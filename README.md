@@ -18,6 +18,8 @@ Der Dashboard löst abstrakte geschäftliche Herausforderungen durch Echtzeit-Ü
 
 ---
 
+Wir nutzen [Diskussionen](https://github.com/Logic-HQ/SAP-Extensibility-Hub-CPI-Adapter-Supplier-Fork/discussions/1) als Plattform.
+
 
 ## 🏗️ Architekturübersicht
 
@@ -71,6 +73,23 @@ outbound_alert_flow.json`"];
 
 ## 📂 Projektstruktur
 
+# Entwurf einer strukturierten Mapping-Konfiguration
+
+---
+
+## Kernlogik zur Integration: integration-cpi/flows/inbound_stock_update.json
+
+
+Dies ist eine simulierte Darstellung der Konfiguration einer Mapping-Knoten, die das Umwandeln eines externen XML-Datensatzes eines Lieferanten in interne HANA-Strukturen steuert.
+
+
+Ein Annotation-Knoten oder ein Mapping-Knotenzubehör existiert (z. B. stellt `@Vdm 'true'` sicher, dass Fiori Elements das Benutzeroberflächeninterface automatisch generieren kann).
+
+```ASCII
+Lieferanten-API -> [CPI-Mapping-Knoten] -> Z_INVENTORY_STATUS (CDS-Ansicht) -> Fiori-App
+            ↑                                    |           ↑
+        (Transformationlogik)               (Datenmodell)    (Visualisierungsschicht)
+```
 
 ## 🛠️ Installationsanleitung
 
